@@ -6,9 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers;
 
-[ApiController]
-[Route("api/[controller]")] // /api/users
-public class UsersController(DataContext context) : ControllerBase
+
+public class UsersController(DataContext context) : BaseApiController
 {
     [HttpGet]
     public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
@@ -32,7 +31,7 @@ public class UsersController(DataContext context) : ControllerBase
     [HttpPost]
     public async Task<ActionResult<AppUser>> AddUser(int id, string username)
     {
-        var newAppUser = new AppUser{Id = id, UserName = username};
+        var newAppUser = new AppUser{Id = id, UserName = username, PasswordHash=[], PasswordSalt=[]};
         
         context.User.Add(newAppUser);
         await context.SaveChangesAsync();
