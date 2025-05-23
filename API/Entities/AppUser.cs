@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace API.Entities;
+﻿namespace API.Entities;
 
 /// <summary>
 /// Summary description for AppUser
@@ -12,5 +10,3 @@ public class AppUser
     public required byte[] PasswordHash { get; set; }
     public required byte[] PasswordSalt { get; set; }
 }
-
-
