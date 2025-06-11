@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using System.Text;
 using API.Data;
 using API.Entities;
@@ -13,7 +12,7 @@ public class UsersController(DataContext context) : BaseApiController
 {
     [AllowAnonymous]
     [HttpGet] // GET to /api/users
-    public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
+    public async Task<ActionResult<IEnumerable<User>>> GetUsers()
     {
         var users = await context.User.ToListAsync();
 
@@ -22,7 +21,7 @@ public class UsersController(DataContext context) : BaseApiController
 
     [Authorize]
     [HttpGet("{id:int}")] // GET to /api/users/USERID (1,2,3,12, etc)
-    public async Task<ActionResult<AppUser>> GetUser(int id)
+    public async Task<ActionResult<User>> GetUser(int id)
     {
         var user = await context.User.FindAsync(id);
 
@@ -32,12 +31,12 @@ public class UsersController(DataContext context) : BaseApiController
     }
 
     [HttpPost] // POST to /api/users/
-    public async Task<ActionResult<AppUser>> AddUser(int id, string username, string password, string passwordSalt)
+    public async Task<ActionResult<User>> AddUser(int id, string username, string password, string passwordSalt)
     {
         byte[] passwordBytes = Encoding.UTF8.GetBytes(password);
         byte[] passwordSaltBytes = Encoding.UTF8.GetBytes(passwordSalt);
 
-        var newAppUser = new AppUser{Id = id, UserName = username, PasswordHash= passwordBytes, PasswordSalt= passwordSaltBytes };
+        var newAppUser = new User{Id = id, UserName = username, PasswordHash= passwordBytes, PasswordSalt= passwordSaltBytes };
         
         context.User.Add(newAppUser);
         await context.SaveChangesAsync();

@@ -18,16 +18,16 @@ public class AccountController(DataContext context, ITokenService tokenService) 
     {
         //var newAppUser = new AppUser{Id = id, UserName = username, PasswordHash=[], PasswordSalt=[]};
 
-        if (await UserExists(registerDTO.Username))
+        if (await UserExists(registerDTO.UserName))
         {
             return BadRequest("Username is already taken");
         }
 
         using var hmac = new HMACSHA512();
 
-        var user = new AppUser
+        var user = new User
         {
-            UserName = registerDTO.Username,
+            UserName = registerDTO.UserName,
             PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDTO.Password)),
             PasswordSalt = hmac.Key
         };
@@ -52,7 +52,7 @@ public class AccountController(DataContext context, ITokenService tokenService) 
 
         // For now, we will stick with using FirstOrDefaultAsync to get the user from the DB
         var user = await context.User.FirstOrDefaultAsync(x =>
-            x.UserName.ToLower() == loginDTO.Username.ToLower());
+            x.UserName.ToLower() == loginDTO.UserName.ToLower());
 
         if (user == null)
         {
@@ -80,5 +80,11 @@ public class AccountController(DataContext context, ITokenService tokenService) 
     private async Task<bool> UserExists(string username)
     {
         return await context.User.AnyAsync(x => x.UserName.ToLower() == username.ToLower());
+    }
+
+    [HttpGet("check-username")]
+    public async Task<bool> CheckUserName(string username)
+    {
+        return await UserExists(username);
     }
 }

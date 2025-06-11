@@ -9,7 +9,7 @@ namespace API.Services
 {
     public class TokenService(IConfiguration config) : ITokenService
     {
-        public string CreateToken(AppUser user)
+        public string CreateToken(User user)
         {
             var tokenKey = config["TokenKey"] ?? throw new Exception("Cannot access tokenKey from appsettings");
 
